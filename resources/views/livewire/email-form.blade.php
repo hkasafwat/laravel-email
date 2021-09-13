@@ -3,7 +3,9 @@
         <div>Send Email</div>
 
         <form>
-            <input type="text" name=""
+            <input type="text" name="full-name" placeholder="Full Name"/>
+            <input type="email" name="email" placeholder="Email"/>
+            <textarea placeholder="Email Contents"> </textarea>
         </form>
     </div>
 </div>
