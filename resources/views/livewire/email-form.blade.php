@@ -1,6 +1,6 @@
 
 
-    <div class="flex flex-col justify-center min-h-screen py-12 bg-gray-50 sm:px-6 lg:px-8">
+    <div class="flex flex-col justify-center  py-12 sm:px-6 lg:px-8">
         <div class="absolute top-0 right-0 mt-4 mr-4">
             @if (Route::has('login'))
                 <div class="space-x-4">
@@ -41,6 +41,8 @@
                     @error('messageContent')
                         <span class="error text-red-600 font-bold">{{ $message }}</span>
                     @enderror
+                    <span class="error text-red-600 font-bold">{{ $ratelimitWarning ?? '' }}</span>
+                    
                     <button class="bg-white shadow rounded p-4 font-bold text-lg w-32 mx-auto" wire:click="submit">Submit</button>
                 </form>
             </div>

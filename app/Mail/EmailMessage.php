@@ -11,6 +11,7 @@ class EmailMessage extends Mailable
 {
     use Queueable, SerializesModels;
 
+    public $email_id;
     public $email;
     public $messageContent;
 
@@ -19,8 +20,9 @@ class EmailMessage extends Mailable
      *
      * @return void
      */
-    public function __construct($email, $messageContent)
+    public function __construct($email_id, $email, $messageContent)
     {
+        $this->email_id = $email_id;
         $this->email = $email;
         $this->messageContent = $messageContent;
     }
@@ -32,6 +34,15 @@ class EmailMessage extends Mailable
      */
     public function build()
     {
-        return $this->view('emails.message');
+        $this->view('emails.message');
+
+        $this->withSwiftMessage(function ($message) {
+            $message->getHeaders()->addTextHeader(
+                'X-Mailgun-Variables',
+                '{"email_id": "' .  $this->email_id . '" }'
+            );
+        });
+
+        return $this;
     }
 }

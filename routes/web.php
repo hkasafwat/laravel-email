@@ -55,5 +55,8 @@ Route::middleware('auth')->group(function () {
     Route::post('logout', LogoutController::class)
         ->name('logout');
 
-    Route::get('/email', App\Http\Livewire\EmailForm::class)->name('email');
+    // Route::get('/email', App\Http\Livewire\EmailForm::class)->name('email');
+    Route::get('/email', App\Http\Livewire\EmailPage::class)->name('email');
 });
+
+Route::post('/laravel-email/mailgun/webhooks', [App\Http\Controllers\MailgunWebhookController::class, 'handleWebhooks']);
