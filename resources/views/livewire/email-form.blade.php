@@ -43,7 +43,7 @@
                     @enderror
                     <span class="error text-red-600 font-bold">{{ $ratelimitWarning ?? '' }}</span>
                     
-                    <button class="bg-white shadow rounded p-4 font-bold text-lg w-32 mx-auto" wire:click="submit">Submit</button>
+                    <button class="bg-white shadow rounded p-4 font-bold text-lg w-32 mx-auto" wire:click="submit" wire:poll.15000ms="clearRateLimiter">Submit</button>
                 </form>
             </div>
         </div>

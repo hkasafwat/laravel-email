@@ -26,12 +26,13 @@ class EmailForm extends Component
 
     public function submit()
     {
-        $executed = RateLimiter::attempt(
+    
+       $executed = RateLimiter::attempt(
             'send-email:' . Auth::id(),
             $perMinute = 1,
             function () {
                 $this->validate();
-                
+
                 $message = Message::create([
                     'user_id' => Auth::id(),
                     'sender' => 'hkasafwat@gmail.com',
@@ -44,29 +45,28 @@ class EmailForm extends Component
 
                 Mail::to('hkasafwat@gmail.com')->send(new EmailMessage($message->id, $this->email, $this->messageContent));
 
-                $this->startDate = date("m/d/Y h:i:s a", time());
-
+                $this->startTime = date("m/d/Y h:i:s a", time());
+                Log::info('sent');
+                Log::info($this->startTime);
                 $this->success = 'Email sent';
             }
         );
 
         if (!$executed) {
             $this->ratelimitWarning = 'Only one email can be sent every 15 seconds';
-            return 'Only one email can be sent every 15 seconds';
         }
 
-        $now = date("m/d/Y h:i:s a", time());
-
-
-        // Log::info(RateLimiter::remaining('send-email:' . Auth::id(), $perMinute = 1));
-        if(RateLimiter::remaining('send-email:' . Auth::id(), $perMinute = 1) == 0 && $now > $this->startTime->modify('+30 seconds')) {
-            
-        
-        }
+       
     }
 
-    public function rateLimiting()
-    {
+    public function clearRateLimiter() {
+        $now = date("m/d/Y h:i:s a", time());
+        $future = date("m/d/Y h:i:s a", strtotime($this->startTime . " 15 seconds"));
+
+        if ($now > $future) {
+            RateLimiter::clear('send-email:' . Auth::id());
+            $this->ratelimitWarning = '';
+        }
     }
 
     public function render()

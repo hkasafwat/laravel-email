@@ -6,6 +6,7 @@ use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Support\Facades\Auth;
 
 class EmailMessage extends Mailable
 {
@@ -34,7 +35,7 @@ class EmailMessage extends Mailable
      */
     public function build()
     {
-        $this->view('emails.message');
+        $this->from(Auth::user()->email)->view('emails.message');
 
         $this->withSwiftMessage(function ($message) {
             $message->getHeaders()->addTextHeader(
